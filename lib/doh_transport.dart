@@ -1,4 +1,4 @@
-/// Bounded DNS-over-HTTPS transport contracts and errors.
+/// Bounded DNS over HTTPS transport contracts and their exceptions.
 library;
 
 export 'src/exceptions.dart';

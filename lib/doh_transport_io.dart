@@ -1,4 +1,4 @@
-/// Everything in `doh_transport`, plus the `dart:io` transport.
+/// The platform-neutral DNS over HTTPS API plus the `dart:io` transport.
 library;
 
 export 'doh_transport.dart';

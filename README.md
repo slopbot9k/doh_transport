@@ -1,6 +1,6 @@
 # doh_transport
 
-Bounded DNS-over-HTTPS transport for Dart: RFC 8484 wire-format POST and
+Bounded DNS over HTTPS transport for Dart: RFC 8484 wire-format POST and
 plain GET exchanges, direct or through SOCKS5, with a typed failure hierarchy.
 
 ## Usage

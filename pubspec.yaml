@@ -1,5 +1,5 @@
 name: doh_transport
-description: Bounded DNS-over-HTTPS transport with RFC 8484 wire POST and GET over direct or SOCKS5 connections.
+description: Bounded DNS over HTTPS transport with RFC 8484 wire POST and GET over direct or SOCKS5 connections.
 version: 0.0.1
 repository: https://github.com/cypherstack/doh_transport
 environment:
