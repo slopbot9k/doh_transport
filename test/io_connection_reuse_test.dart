@@ -402,7 +402,7 @@ void main() {
         expectLater(operation.result, throwsA(isA<DohCancelledException>()))
     ];
     await until(() => server.exchanges.length == 2);
-    await t.close();
+    t.close();
     await Future.wait(failed);
     await until(() => server.closed == 1);
     await expectLater(
@@ -419,7 +419,7 @@ void main() {
     final failed =
         expectLater(start(t, 1).result, throwsA(isA<DohCancelledException>()));
     await proxy.connected.future;
-    await t.close();
+    t.close();
     await failed;
     await proxy.disconnected.future.timeout(const Duration(seconds: 2));
     expect(server.connections, 0);
@@ -429,7 +429,7 @@ void main() {
     await serve(answer);
     final t = transport(null);
     await expectAnswer(t, 1);
-    await t.close();
+    t.close();
     await until(() => server.closed == 1);
   });
 }

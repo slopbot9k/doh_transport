@@ -62,7 +62,7 @@ void main() {
       expect(requests, 1);
       if (proxied) {
         expect(proxy.target, '8.8.8.8');
-        await transport.close();
+        transport.close();
         await proxy.disconnected.future.timeout(const Duration(seconds: 2));
       }
     });

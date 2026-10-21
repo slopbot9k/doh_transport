@@ -181,7 +181,7 @@ void main() {
           .cancel();
       t.startWire(endpoint, wireReply(), maxResponseBytes: 65535);
       t.startWire(endpoint, wireQuery(), maxResponseBytes: 65535);
-      await t.close();
+      t.close();
       await Future<void>.delayed(const Duration(milliseconds: 20));
     }, (error, _) => errors.add(error));
     expect(errors, isEmpty);

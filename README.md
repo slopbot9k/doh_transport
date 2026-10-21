@@ -17,7 +17,7 @@ try {
 } on DohTransportException catch (error) {
   print(error);
 } finally {
-  await transport.close();
+  transport.close();
 }
 ```
 

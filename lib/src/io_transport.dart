@@ -124,9 +124,9 @@ class IoDohTransport implements DohTransport, DohWireTransport {
   }
 
   /// Fails queued and running operations with [DohCancelledException], fails
-  /// later starts the same way, and begins closing every connection. Socket
-  /// teardown finishes asynchronously after this returns.
-  Future<void> close() async {
+  /// later starts the same way, and begins closing every connection. Sockets
+  /// may still be closing when this returns.
+  void close() {
     _closed = true;
     for (final request in [..._waiting, ..._running]) {
       request.cancel(DohCancellationReason.transportClosed);
