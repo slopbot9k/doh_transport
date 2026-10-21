@@ -43,7 +43,7 @@ void main() {
         securityContext: pki.clientContext(),
         proxy: proxy == null
             ? null
-            : SocksProxy(InternetAddress.loopbackIPv4, proxy.port,
+            : DohSocksProxy(InternetAddress.loopbackIPv4, proxy.port,
                 credentials: SocksCredentials.isolation('lookup')),
         reuseConnections: reuseConnections,
         maxConcurrentRequests: maxConcurrentRequests,
@@ -53,7 +53,7 @@ void main() {
     return transport;
   }
 
-  DnsOperation<DohHttpResponse> start(IoDohTransport transport, int id,
+  DohTransportOperation<DohHttpResponse> start(IoDohTransport transport, int id,
           {String name = 'alice.example'}) =>
       transport.startWire(
           Uri.parse('https://localhost:${server.port}/dns-query'),
@@ -230,7 +230,7 @@ void main() {
           securityContext: pki.clientContext(),
           proxy: proxy == null
               ? null
-              : SocksProxy(InternetAddress.loopbackIPv4, proxy.port));
+              : DohSocksProxy(InternetAddress.loopbackIPv4, proxy.port));
       addTearDown(t.close);
       expect(t.reuseConnections, !proxied);
       for (var id = 1; id <= 3; id++) {
@@ -350,7 +350,8 @@ void main() {
     await other.start();
     addTearDown(other.close);
     final t = transport(null, maxConcurrentRequests: 1);
-    DnsOperation<DohHttpResponse> startAt(ScriptedServer target, int id) =>
+    DohTransportOperation<DohHttpResponse> startAt(
+            ScriptedServer target, int id) =>
         t.startWire(Uri.parse('https://localhost:${target.port}/dns-query'),
             wireQuery(id: id),
             maxResponseBytes: 512);

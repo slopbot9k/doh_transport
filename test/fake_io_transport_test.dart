@@ -55,7 +55,7 @@ void main() {
     );
     addTearDown(t.close);
 
-    late DnsOperation<DohHttpResponse> failed;
+    late DohTransportOperation<DohHttpResponse> failed;
     expect(
       () => failed = t.startWire(
         endpoint,

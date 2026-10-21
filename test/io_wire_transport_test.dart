@@ -55,7 +55,7 @@ void main() {
       final transport = IoDohTransport(
           securityContext: pki.clientContext(),
           proxy: proxied
-              ? SocksProxy(InternetAddress.loopbackIPv4, proxy.port)
+              ? DohSocksProxy(InternetAddress.loopbackIPv4, proxy.port)
               : null);
       final query = wireQuery(id: 0xbeef);
       final response = await transport
@@ -215,7 +215,7 @@ void main() {
           securityContext: pki.clientContext(),
           requestTimeout: const Duration(milliseconds: 300),
           proxy: proxied
-              ? SocksProxy(InternetAddress.loopbackIPv4, proxy.port)
+              ? DohSocksProxy(InternetAddress.loopbackIPv4, proxy.port)
               : null);
       await expectLater(
           transport

@@ -28,7 +28,7 @@ void main() {
   final dns = base64Url.encode(wireQuery()).replaceAll('=', '');
   Uri endpoint() => Uri.parse('https://localhost:${server.port}/dns-query')
       .replace(queryParameters: {'dns': dns});
-  DnsOperation<DohHttpResponse> get(IoDohTransport transport,
+  DohTransportOperation<DohHttpResponse> get(IoDohTransport transport,
           {String type = mediaType, int maxResponseBytes = 65536}) =>
       transport.start(endpoint(),
           mediaType: type, maxResponseBytes: maxResponseBytes);
@@ -54,7 +54,7 @@ void main() {
       final transport = IoDohTransport(
           securityContext: trust,
           proxy: proxied
-              ? SocksProxy(InternetAddress.loopbackIPv4, proxy.port)
+              ? DohSocksProxy(InternetAddress.loopbackIPv4, proxy.port)
               : null,
           destination: proxied ? InternetAddress('8.8.8.8') : null);
       final response = await get(transport).result;
@@ -79,7 +79,7 @@ void main() {
     addTearDown(proxy.close);
     final transport = IoDohTransport(
         securityContext: trust,
-        proxy: SocksProxy(InternetAddress.loopbackIPv4, proxy.port));
+        proxy: DohSocksProxy(InternetAddress.loopbackIPv4, proxy.port));
     await expectLater(
         get(transport).result, throwsA(isA<DohConnectionException>()));
     await Future<void>.delayed(const Duration(milliseconds: 50));
@@ -133,7 +133,7 @@ void main() {
       final transport = IoDohTransport(
           securityContext: trust,
           requestTimeout: const Duration(milliseconds: 300),
-          proxy: SocksProxy(InternetAddress.loopbackIPv4, proxy.port));
+          proxy: DohSocksProxy(InternetAddress.loopbackIPv4, proxy.port));
       final operation = get(transport);
       final failed = expectLater(
           operation.result,

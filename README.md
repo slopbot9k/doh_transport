@@ -22,9 +22,9 @@ try {
 ```
 
 `doh_transport.dart` is platform-neutral: the `DohWireTransport` (POST) and
-`DohTransport` (GET) interfaces, `DnsOperation`, `DohHttpResponse`,
+`DohTransport` (GET) interfaces, `DohTransportOperation`, `DohHttpResponse`,
 `isUsableDohEndpoint`, and `DohTransportException` with its leaves.
-`doh_transport_io.dart` adds `IoDohTransport`, `SocksProxy` and
+`doh_transport_io.dart` adds `IoDohTransport`, `DohSocksProxy` and
 `SocksCredentials` on `dart:io`.
 
 ## Trust model
@@ -39,7 +39,7 @@ Nothing here validates DNSSEC: the resolver sees every query and may answer as
 it likes. Without a proxy it also sees your address.
 
 Every failure is a `DohTransportException` leaf delivered through
-`DnsOperation.result`; `start` and `startWire` never throw. Only HTTP 200
+`DohTransportOperation.result`; `start` and `startWire` never throw. Only HTTP 200
 bodies are delivered; any other status is a `DohHttpStatusException`. Leaves
 carry their status code, size limit, deadline, queue bound or cancellation
 reason, and keep any lower-layer `cause` without printing it.
@@ -48,7 +48,7 @@ reason, and keep any lower-layer `cause` without printing it.
 
 `IoDohTransport` options:
 
-- `proxy`: a `SocksProxy` with a numeric address. `SocksCredentials.isolation`
+- `proxy`: a `DohSocksProxy` with a numeric address. `SocksCredentials.isolation`
   gives Tor stream isolation.
 - `destination`: connect every request to this address, directly or through
   the proxy, so the endpoint host is never resolved. TLS still authenticates

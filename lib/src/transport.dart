@@ -5,18 +5,18 @@ import 'exceptions.dart';
 /// A started request. Starting never throws: every failure completes [result]
 /// with a [DohTransportException], and an unawaited [result] never raises an
 /// uncaught error.
-class DnsOperation<T> {
+class DohTransportOperation<T> {
   final Future<T> result;
 
   /// Fails an unfinished operation and releases its work. Repeated calls are
   /// safe.
   final void Function() cancel;
-  DnsOperation(this.result, this.cancel) {
+  DohTransportOperation(this.result, this.cancel) {
     result.ignore();
   }
 
   /// The error is reported only to listeners of [result]; dropping it is safe.
-  DnsOperation.failed(DohTransportException error)
+  DohTransportOperation.failed(DohTransportException error)
       : this(Future<T>.error(error), _noop);
 }
 
@@ -38,18 +38,18 @@ class DohHttpResponse {
 ///
 /// Only HTTP 200 bodies are delivered; every other status is a
 /// [DohHttpStatusException]. Implementations deliver failures through
-/// [DnsOperation.result] and make cancellation idempotent.
+/// [DohTransportOperation.result] and make cancellation idempotent.
 abstract interface class DohTransport {
   /// Requests [uri], sending [mediaType] as `Accept` and requiring it as the
   /// response `Content-Type`. The body is returned as received.
-  DnsOperation<DohHttpResponse> start(Uri uri,
+  DohTransportOperation<DohHttpResponse> start(Uri uri,
       {required String mediaType, required int maxResponseBytes});
 }
 
 /// Sends bounded RFC 8484 wire-format queries. Only HTTP 200 bodies are
 /// delivered; every other status is a [DohHttpStatusException] failure.
 abstract interface class DohWireTransport {
-  DnsOperation<DohHttpResponse> startWire(Uri uri, List<int> query,
+  DohTransportOperation<DohHttpResponse> startWire(Uri uri, List<int> query,
       {required int maxResponseBytes});
 }
 

@@ -11,11 +11,11 @@ import 'wire.dart';
 
 /// A SOCKS5 proxy, addressed numerically so no local DNS lookup is needed.
 /// Use [SocksCredentials.isolation] for Tor stream isolation.
-class SocksProxy {
+class DohSocksProxy {
   final InternetAddress host;
   final int port;
   final SocksCredentials? credentials;
-  const SocksProxy(this.host, this.port, {this.credentials});
+  const DohSocksProxy(this.host, this.port, {this.credentials});
 }
 
 /// A `dart:io` HTTPS/1.1 DoH transport, direct or through SOCKS5.
@@ -25,7 +25,7 @@ class SocksProxy {
 /// deadlines, and admits at most [maxConcurrentRequests] running plus
 /// [maxQueuedRequests] waiting operations. Call [close] when done.
 class IoDohTransport implements DohTransport, DohWireTransport {
-  final SocksProxy? proxy;
+  final DohSocksProxy? proxy;
 
   /// Connects every request to this address, directly or through the [proxy],
   /// so the endpoint host is never resolved locally or by the proxy. It applies
@@ -94,25 +94,25 @@ class IoDohTransport implements DohTransport, DohWireTransport {
   }
 
   @override
-  DnsOperation<DohHttpResponse> start(Uri uri,
+  DohTransportOperation<DohHttpResponse> start(Uri uri,
       {required String mediaType, required int maxResponseBytes}) {
     final type = mediaType.toLowerCase();
     if (!_mediaType.hasMatch(type)) {
-      return DnsOperation.failed(
+      return DohTransportOperation.failed(
           const DohInvalidQueryException('Expected a type/subtype media type'));
     }
     return _start(uri, type, maxResponseBytes);
   }
 
   @override
-  DnsOperation<DohHttpResponse> startWire(Uri uri, List<int> query,
+  DohTransportOperation<DohHttpResponse> startWire(Uri uri, List<int> query,
       {required int maxResponseBytes}) {
     final List<int> checked;
     try {
       checked =
           padQueries ? padDnsWireQuery(query) : checkedDnsWireQuery(query);
     } on DohTransportException catch (error) {
-      return DnsOperation.failed(error);
+      return DohTransportOperation.failed(error);
     }
     return _start(uri, _dnsMessage, min(maxResponseBytes, 65535), checked);
   }
@@ -130,22 +130,22 @@ class IoDohTransport implements DohTransport, DohWireTransport {
     }
   }
 
-  DnsOperation<DohHttpResponse> _start(
+  DohTransportOperation<DohHttpResponse> _start(
       Uri uri, String mediaType, int maxResponseBytes,
       [List<int>? query]) {
     // Before any request state exists: _origin throws on an unreadable port.
     if (!isUsableDohEndpoint(uri) || maxResponseBytes < 1) {
-      return DnsOperation.failed(
+      return DohTransportOperation.failed(
           const DohInvalidQueryException('Expected a bounded HTTPS request'));
     }
     if (_closed) {
-      return DnsOperation.failed(const DohCancelledException(
+      return DohTransportOperation.failed(const DohCancelledException(
           'DNS transport closed',
           reason: DohCancellationReason.transportClosed));
     }
     if (_active >= maxConcurrentRequests &&
         _waiting.length >= maxQueuedRequests) {
-      return DnsOperation.failed(DohQueueFullException(
+      return DohTransportOperation.failed(DohQueueFullException(
           'DNS transport request queue is full',
           maxQueuedRequests: maxQueuedRequests));
     }
@@ -156,7 +156,7 @@ class IoDohTransport implements DohTransport, DohWireTransport {
     } else {
       _waiting.add(request);
     }
-    return DnsOperation(request.result.future, request.cancel);
+    return DohTransportOperation(request.result.future, request.cancel);
   }
 
   void _run(_IoRequest request) {

@@ -60,7 +60,7 @@ void main() {
       addTearDown(proxy.close);
       return (
         IoDohTransport(
-            proxy: SocksProxy(InternetAddress.loopbackIPv4, proxy.port),
+            proxy: DohSocksProxy(InternetAddress.loopbackIPv4, proxy.port),
             connectionTimeout: timeout),
         'resolver.example'
       );
@@ -68,7 +68,7 @@ void main() {
   };
 
   paths.forEach((name, create) {
-    Future<DnsOperation<DohHttpResponse>> start() async {
+    Future<DohTransportOperation<DohHttpResponse>> start() async {
       final (transport, host) = await create();
       addTearDown(transport.close);
       return transport.startWire(

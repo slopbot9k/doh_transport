@@ -91,8 +91,10 @@ void main() {
       () async {
     final errors = <Object>[];
     await runZonedGuarded(() async {
-      DnsOperation<void>(Future<void>.error(StateError('dropped')), () {});
-      DnsOperation<void>.failed(const DohConnectionException('dropped'));
+      DohTransportOperation<void>(
+          Future<void>.error(StateError('dropped')), () {});
+      DohTransportOperation<void>.failed(
+          const DohConnectionException('dropped'));
       await Future<void>.delayed(Duration.zero);
     }, (error, _) => errors.add(error));
 
