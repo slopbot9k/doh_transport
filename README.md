@@ -24,8 +24,8 @@ try {
 `doh_transport.dart` is platform-neutral: the `DohWireTransport` (POST) and
 `DohTransport` (GET) interfaces, `DohTransportOperation`, `DohHttpResponse`,
 `isUsableDohEndpoint`, and `DohTransportException` with its leaves.
-`doh_transport_io.dart` adds `IoDohTransport`, `DohSocksProxy` and
-`SocksCredentials` on `dart:io`.
+`doh_transport_io.dart` adds `IoDohTransport` and `DohSocksProxy` on
+`dart:io`.
 
 ## Trust model
 
@@ -48,8 +48,8 @@ reason, and keep any lower-layer `cause` without printing it.
 
 `IoDohTransport` options:
 
-- `proxy`: a `DohSocksProxy` with a numeric address. `SocksCredentials.isolation`
-  gives Tor stream isolation.
+- `proxy`: a `DohSocksProxy` with a numeric address. Its `isolationToken`
+  becomes SOCKS credentials, giving Tor stream isolation.
 - `destination`: connect every request to this address, directly or through
   the proxy, so the endpoint host is never resolved. TLS still authenticates
   the URI host, so the address must serve its certificate.

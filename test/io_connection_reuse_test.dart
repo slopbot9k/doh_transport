@@ -44,7 +44,7 @@ void main() {
         proxy: proxy == null
             ? null
             : DohSocksProxy(InternetAddress.loopbackIPv4, proxy.port,
-                credentials: SocksCredentials.isolation('lookup')),
+                isolationToken: 'lookup'),
         reuseConnections: reuseConnections,
         maxConcurrentRequests: maxConcurrentRequests,
         requestTimeout: requestTimeout,

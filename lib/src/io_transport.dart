@@ -10,12 +10,18 @@ import 'transport.dart';
 import 'wire.dart';
 
 /// A SOCKS5 proxy, addressed numerically so no local DNS lookup is needed.
-/// Use [SocksCredentials.isolation] for Tor stream isolation.
+/// An [isolationToken] is sent as SOCKS credentials, which Tor uses for stream
+/// isolation; a token that is empty or longer than 255 UTF-8 bytes throws
+/// [ArgumentError].
 class DohSocksProxy {
   final InternetAddress host;
   final int port;
-  final SocksCredentials? credentials;
-  const DohSocksProxy(this.host, this.port, {this.credentials});
+  final String? isolationToken;
+  final SocksCredentials? _credentials;
+  DohSocksProxy(this.host, this.port, {this.isolationToken})
+      : _credentials = isolationToken == null
+            ? null
+            : SocksCredentials.isolation(isolationToken);
 }
 
 /// A `dart:io` HTTPS/1.1 DoH transport, direct or through SOCKS5.
@@ -272,7 +278,7 @@ class IoDohTransport implements DohTransport, DohWireTransport {
         targetPort: uri.port,
         tlsHost: uri.host,
         securityContext: securityContext,
-        credentials: proxy.credentials,
+        credentials: proxy._credentials,
         timeout: connectionTimeout);
     return ConnectionTask.fromSocket(
         task.socket.catchError(
