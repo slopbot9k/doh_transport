@@ -22,14 +22,13 @@ class DnsOperation<T> {
 
 void _noop() {}
 
-/// A complete HTTPS response from a DoH resolver.
+/// The body of an HTTP 200 response from a DoH resolver.
 class DohHttpResponse {
-  final int statusCode;
   final List<int> body;
 
   /// Time the response spent in HTTP caches, from its `Age` header.
   final Duration age;
-  DohHttpResponse(this.statusCode, List<int> body, {this.age = Duration.zero})
+  DohHttpResponse(List<int> body, {this.age = Duration.zero})
       : body = List.unmodifiable(body) {
     if (age < Duration.zero) throw ArgumentError.value(age, 'age');
   }
@@ -37,8 +36,9 @@ class DohHttpResponse {
 
 /// Sends bounded HTTPS GET requests to a DoH resolver.
 ///
-/// Implementations deliver failures through [DnsOperation.result] and make
-/// cancellation idempotent.
+/// Only HTTP 200 bodies are delivered; every other status is a
+/// [DohHttpStatusException]. Implementations deliver failures through
+/// [DnsOperation.result] and make cancellation idempotent.
 abstract interface class DohTransport {
   /// Requests [uri], sending [mediaType] as `Accept` and requiring it as the
   /// response `Content-Type`. The body is returned as received.
@@ -46,7 +46,8 @@ abstract interface class DohTransport {
       {required String mediaType, required int maxResponseBytes});
 }
 
-/// Sends bounded RFC 8484 wire-format queries.
+/// Sends bounded RFC 8484 wire-format queries. Only HTTP 200 bodies are
+/// delivered; every other status is a [DohHttpStatusException] failure.
 abstract interface class DohWireTransport {
   DnsOperation<DohHttpResponse> startWire(Uri uri, List<int> query,
       {required int maxResponseBytes});

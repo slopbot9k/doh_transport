@@ -61,7 +61,6 @@ void main() {
       final response = await transport
           .startWire(endpoint(), query, maxResponseBytes: 65535)
           .result;
-      expect(response.statusCode, 200);
       expect(response.body.sublist(0, 2), [0xbe, 0xef]);
       expect(sent!.length % 128, 0);
       expect(sent!.sublist(2, query.length - 2),
@@ -145,10 +144,9 @@ void main() {
             .result,
         throwsA(isA<DohInvalidQueryException>()));
     expect(requests, 0);
-    final response = await transport
+    await transport
         .startWire(endpoint(), wireQuery(), maxResponseBytes: 512)
         .result;
-    expect(response.statusCode, 200);
     expect(requests, 1);
   });
 

@@ -473,7 +473,7 @@ class _IoRequest {
           ..[0] = query![0]
           ..[1] = query![1];
       }
-      _finish(DohHttpResponse(response.statusCode, body,
+      _finish(DohHttpResponse(body,
           age: _age(response.headers[HttpHeaders.ageHeader])));
     } catch (error, stack) {
       _finish(

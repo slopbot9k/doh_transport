@@ -39,9 +39,10 @@ Nothing here validates DNSSEC: the resolver sees every query and may answer as
 it likes. Without a proxy it also sees your address.
 
 Every failure is a `DohTransportException` leaf delivered through
-`DnsOperation.result`; `start` and `startWire` never throw. Leaves carry their
-status code, size limit, deadline, queue bound or cancellation reason, and keep
-any lower-layer `cause` without printing it.
+`DnsOperation.result`; `start` and `startWire` never throw. Only HTTP 200
+bodies are delivered; any other status is a `DohHttpStatusException`. Leaves
+carry their status code, size limit, deadline, queue bound or cancellation
+reason, and keep any lower-layer `cause` without printing it.
 
 ## Configuration
 

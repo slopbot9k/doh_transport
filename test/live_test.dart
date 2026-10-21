@@ -32,7 +32,7 @@ void main() {
             .startWire(endpoint, dnssecQuery(name, type),
                 maxResponseBytes: 65535)
             .result;
-        expect(response.statusCode, 200);
+        expect(response.body, isNotEmpty);
       }, skip: skip);
     }
   }
@@ -45,6 +45,6 @@ void main() {
             dnssecQuery('getmonero.org', 16),
             maxResponseBytes: 65535)
         .result;
-    expect(response.statusCode, 200);
+    expect(response.body, isNotEmpty);
   }, skip: skip);
 }
