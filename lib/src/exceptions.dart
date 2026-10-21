@@ -19,14 +19,13 @@ final class DohInvalidQueryException extends DohTransportException {
       {super.cause, super.causeStackTrace});
 }
 
-/// A response with the wrong media type or an encoding, or a wire reply whose
-/// header or question is malformed, not a response, or truncated.
+/// A response had a bad media type or encoding, or was a malformed wire reply.
 final class DohMalformedResponseException extends DohTransportException {
   const DohMalformedResponseException(super.message,
       {super.cause, super.causeStackTrace});
 }
 
-/// A response body larger than [limitBytes].
+/// A response body exceeded [limitBytes].
 final class DohResponseTooLargeException extends DohTransportException {
   final int limitBytes;
   const DohResponseTooLargeException(super.message,
@@ -36,7 +35,7 @@ final class DohResponseTooLargeException extends DohTransportException {
   String toString() => '$runtimeType(limitBytes: $limitBytes): $message';
 }
 
-/// A response that does not answer the question asked.
+/// A wire reply does not answer the question asked.
 final class DohQuestionMismatchException extends DohTransportException {
   const DohQuestionMismatchException(super.message,
       {super.cause, super.causeStackTrace});
@@ -72,7 +71,7 @@ final class DohQueueFullException extends DohTransportException {
 /// Why an operation was cancelled.
 enum DohCancellationReason { caller, transportClosed }
 
-/// An operation cancelled by its caller or by closing its transport.
+/// An operation was cancelled by its caller or by closing its transport.
 final class DohCancelledException extends DohTransportException {
   final DohCancellationReason reason;
   const DohCancelledException(super.message,
@@ -84,7 +83,7 @@ final class DohCancelledException extends DohTransportException {
   String toString() => '$runtimeType(reason: ${reason.name}): $message';
 }
 
-/// An operation that reached its request deadline.
+/// An operation reached its request deadline.
 final class DohRequestTimeoutException extends DohTransportException {
   final Duration timeout;
   const DohRequestTimeoutException(super.message,
