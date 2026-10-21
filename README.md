@@ -68,10 +68,14 @@ Wire query IDs are rewritten per connection and restored in the reply.
 
 ## Development
 
+`dart tool/check.dart` runs format, analyze, tests and a publish dry run;
+`-x integration` skips the loopback socket tests and `DOH_LIVE_TESTS=1`
+enables the live tests against public resolvers.
+
 ```
-dart tool/check.dart                            # format, analyze, test, publish --dry-run
-dart test -x integration                        # skip the loopback socket tests
-DOH_LIVE_TESTS=1 dart test test/live_test.dart  # query public resolvers
+dart tool/check.dart
+dart test -x integration
+DOH_LIVE_TESTS=1 dart test test/live_test.dart
 ```
 
 ## License
