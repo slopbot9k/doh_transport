@@ -70,7 +70,7 @@ final class DohQueueFullException extends DohTransportException {
 }
 
 /// Why an operation was cancelled.
-enum DohCancellationReason { caller, transportClosed, redirectRefused }
+enum DohCancellationReason { caller, transportClosed }
 
 /// An operation cancelled by its caller or by closing its transport.
 final class DohCancelledException extends DohTransportException {

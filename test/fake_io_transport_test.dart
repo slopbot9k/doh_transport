@@ -232,4 +232,20 @@ void main() {
     expect(fake.createdClients, 2);
     expect(fake.requests, hasLength(2));
   });
+
+  test('connection factory refuses a connection outside its request', () async {
+    final fake = FakeDohHttpClient(reply: (_, body) => wireEcho(body));
+    final t = transport(fake);
+    await t
+        .startWire(endpoint, wireQuery(id: 1), maxResponseBytes: 65535)
+        .result;
+    final factory = fake.connectionFactory!;
+
+    // The lane is idle: no request owns it.
+    expect(() => factory(endpoint, null, null),
+        throwsA(isA<DohConnectionException>()));
+    // Another origin never belongs to this lane.
+    expect(() => factory(Uri.https('other.example', '/dns-query'), null, null),
+        throwsA(isA<DohConnectionException>()));
+  });
 }

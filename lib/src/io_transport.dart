@@ -234,9 +234,8 @@ class IoDohTransport implements DohTransport, DohWireTransport {
               owner._done ||
               _origin(requested) != lane.origin ||
               _origin(owner.uri) != lane.origin) {
-            throw const DohCancelledException(
-                'DNS connection cancelled or redirected',
-                reason: DohCancellationReason.redirectRefused);
+            throw const DohConnectionException(
+                'DNS connection refused outside its request');
           }
           final task = _connect(owner.uri);
           lane.tasks.add(task);
