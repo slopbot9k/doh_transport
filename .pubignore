@@ -2,3 +2,7 @@
 pubspec.lock
 pubspec_overrides.yaml
 coverage/
+test/
+tool/
+.github/
+dart_test.yaml

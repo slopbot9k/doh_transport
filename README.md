@@ -76,4 +76,5 @@ DOH_LIVE_TESTS=1 dart test test/live_test.dart  # query public resolvers
 
 ## License
 
-MIT; see `LICENSE`. `test/support/LICENSE` covers the test support files.
+MIT; see `LICENSE`. `test/support/LICENSE` in the repository covers the test
+support files.
